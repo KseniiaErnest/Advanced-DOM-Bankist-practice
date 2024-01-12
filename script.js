@@ -7,6 +7,8 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScroll = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -32,41 +34,50 @@ document.addEventListener('keydown', function (e) {
 });
 
 //////////////////////////////////////////////////
-console.log(document.documentElement);
-console.log(document.head);
-console.log(document.body);
+// Smooth scrolling
+btnScroll.addEventListener('scroll', (e) => {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+  console.log(e.target.getBoundingClientRect());
+  console.log('Current scroll (X/Y)', window.pageXOffset, pageYOffset);
+  console.log('height/width viewport', document.documentElement.clientHeight, document.documentElement.clientWidth);
 
-const header = document.querySelector('.header');
-const allSections = document.querySelectorAll('.section');
-document.getElementById('section--1');
-const allButtons = document.getElementsByTagName('button');
-document.getElementsByClassName('btn');
 
-const message = document.createElement('div'); // return DOM element
-message.classList.add('cookie-message');
-message.textContent = 'blahblahblah';
-message.innerHTML =
-  'blahblahblah <button class="btn btn--close-cookie">Got it!</button>';
-header.prepend(message);
-header.append(message.cloneNode(true));
+  // Scrolling
+  // window.scrollTo(s1coords.left + window.pageXOffset, s1coords.top + window.pageYOffset);
 
-document.querySelector('.btn--close-cookie').addEventListener('click', () => {
-  message.remove();
+  window.scrollTo({
+    left: s1coords.left + window.pageXOffset,
+     top: s1coords.top + window.pageYOffset,
+     behavior: 'smooth'
+  })
+
+  // section1.scrollIntoView({behavior: 'smooth'});
 });
+//////////////////////////////////////////////////
+// Page navigation without event delegation
+// document.querySelectorAll('.nav__link').forEach((el) => {
+//   el.addEventListener('click', (e) => {
+//     e.preventDefault();
 
-message.style.backgroundColor = 'blue';
-message.style.width = '120%';
+//     const id = this.getAttribute('href');
+//     document.querySelector(id).scrollIntoView({behavior: 'smooth'})
+//   })
+// })
 
-document.documentElement.style.setProperty('--color-primary', 'orangered');
+// Page navigation with event delegation
+// 1. Add event listener to common parent element
+// 2. Determine what element originated the event and for that we can use e.target => .nav__link
+document.querySelector('.nav__links').addEventListener('click', (e) => {
+  e.preventDefault();
+console.log(e.target);
 
-const logo = document.querySelector('.nav_logo');
-console.log(logo.getAttribute('designer'));
-logo.setAttribute('comapny', 'Bankist');
+// Matching strategy: we check if target event has matching class name, in our case 'nav__link'
+if (e.target.classList.contains('nav__link')) {
 
-logo.classList.add('c');
-logo.classList.remove('c');
-logo.classList.toggle('c');
-logo.classList.contains('c');
+  const id = e.target.getAttribute('href');
+  document.querySelector(id).scrollIntoView({behavior: 'smooth'})
+}
+})
 
-/////////// Test git
-console.log('Hello world!');
+
