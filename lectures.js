@@ -89,3 +89,18 @@ console.log(h1.previousSibling);
 console.log(h1.nextSibling);
 
 console.log(h1.parentElement.children);
+////////////////////////////////////////////////////
+const obsCallback = function(entries, observer) {
+  entries.forEach(entry => {
+    console.log(entry);
+  })
+};
+
+const obsOptions = {
+  root: null,
+  threshhold: [0, 0.2],
+
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+observer.observe(section1);

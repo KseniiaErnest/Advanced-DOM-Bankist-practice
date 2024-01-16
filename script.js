@@ -127,7 +127,7 @@ nav.addEventListener('mouseover', handleHover.bind(0,5));
 nav.addEventListener('mouseout', handleHover.bind(1));
 //////////////////////////////////////////////////////////////////////
 // Sticky navigation by adding 'sticky' class
-
+/*
 const initialCoord = section1.getBoundingClientRect();
 
 window.addEventListener('scroll', function() {
@@ -138,3 +138,71 @@ window.addEventListener('scroll', function() {
     nav.classList.remove('sticky');
   }
 })
+*/
+// Sticky navigation with Intersection Observer API
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+
+
+const stickyNav = function(entries) {
+  const [entry] = entries;
+
+  if(!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+}
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
+//////////////////////////////////////////////////////////////////////////////
+// Reveal sections functionality
+const allSections = document.querySelectorAll('.section');
+const revealSection = function(entries, observer) {
+const [entry] = entries;
+
+if(!entry.isIntersecting) return;
+
+entry.target.classList.remove('section-hidden');
+observer.unobsorve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+
+});
+
+allSections.forEach(function(section) { 
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+})
+///////////////////////////////////////////////////////////////////////////////
+// Lazy Images functionality
+const imgTargets = document.querySelectorAll('img[data-src]');
+
+const loadImg = function(entries, observe) {
+[entry] = entries;
+console.log(entry);
+
+if(!entry.isIntersecting) return;
+
+// Replace src with data-src
+entry.target.src = entry.target.dataset.src;
+entry.target.addEventListener('load', () => {
+  entry.target.classList.remove('lazy-img');
+})
+
+observer.unobserve(entry.target)
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: 0,
+  threshold: 0,
+  rootMargin: '200px'
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
+
+
