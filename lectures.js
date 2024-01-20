@@ -104,3 +104,15 @@ const obsOptions = {
 
 const observer = new IntersectionObserver(obsCallback, obsOptions);
 observer.observe(section1);
+//////////////////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', function(e) {
+  console.log(e);
+});
+
+window.addEventListener('load', function(e) {
+  console.log(e);
+});
+
+window.addEventListener('beforeunload', function(e) {
+  console.log(e);
+})
